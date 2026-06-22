@@ -53,6 +53,7 @@ public partial class App : Application
         services.AddTransient<ITool, Base64Tool>();
         services.AddTransient<ITool, UrlCodecTool>();
         services.AddTransient<ITool, HashTool>();
+        services.AddTransient<ITool, SqlInTool>();
     }
 
     protected override void OnExit(ExitEventArgs e)

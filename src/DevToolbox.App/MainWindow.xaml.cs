@@ -41,6 +41,7 @@ public partial class MainWindow : Window
                     "base64-codec" => new Base64View(),
                     "url-codec" => new UrlCodecView(),
                     "hash-tool" => new HashView(),
+                    "sql-in" => new SqlInView(),
                     _ => null
                 };
 

@@ -1,0 +1,430 @@
+<UserControl x:Class="DevToolbox.Tools.Text.Views.SqlInView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="800"
+             Background="#F7F5F1">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 顶部工具栏 -->
+        <Border Grid.Row="0"
+                Background="White"
+                BorderBrush="#E7E3DA"
+                BorderThickness="0,0,0,1"
+                Padding="15,10">
+            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <!-- 引号类型选择 -->
+                <ComboBox x:Name="QuoteTypeComboBox"
+                         Width="120"
+                         Height="32"
+                         VerticalAlignment="Center"
+                         SelectionChanged="QuoteTypeComboBox_SelectionChanged"
+                         Margin="0,0,8,0">
+                    <ComboBox.Style>
+                        <Style TargetType="ComboBox">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ComboBox">
+                                        <Grid>
+                                            <ToggleButton x:Name="ToggleButton"
+                                                         Grid.Column="2"
+                                                         Focusable="false"
+                                                         IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                         ClickMode="Press"
+                                                         Background="White"
+                                                         BorderBrush="#E7E3DA"
+                                                         BorderThickness="1">
+                                                <ToggleButton.Style>
+                                                    <Style TargetType="ToggleButton">
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Border x:Name="Border"
+                                                                           Background="{TemplateBinding Background}"
+                                                                           BorderBrush="{TemplateBinding BorderBrush}"
+                                                                           BorderThickness="{TemplateBinding BorderThickness}"
+                                                                           CornerRadius="4">
+                                                                        <Grid>
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="*"/>
+                                                                                <ColumnDefinition Width="20"/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <ContentPresenter Grid.Column="0"
+                                                                                             Margin="8,0,0,0"
+                                                                                             HorizontalAlignment="Left"
+                                                                                             VerticalAlignment="Center"/>
+                                                                            <Path Grid.Column="1"
+                                                                                 x:Name="Arrow"
+                                                                                 HorizontalAlignment="Center"
+                                                                                 VerticalAlignment="Center"
+                                                                                 Data="M 0 0 L 4 4 L 8 0 Z"
+                                                                                 Fill="#6B7077"/>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter TargetName="Border" Property="Background" Value="#F7F5F1"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </ToggleButton.Style>
+                                            </ToggleButton>
+                                            <ContentPresenter x:Name="ContentSite"
+                                                             IsHitTestVisible="False"
+                                                             Content="{TemplateBinding SelectionBoxItem}"
+                                                             ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                             ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                             Margin="8,0,20,0"
+                                                             VerticalAlignment="Center"
+                                                             HorizontalAlignment="Left"/>
+                                            <Popup x:Name="Popup"
+                                                  Placement="Bottom"
+                                                  IsOpen="{TemplateBinding IsDropDownOpen}"
+                                                  AllowsTransparency="True"
+                                                  Focusable="False"
+                                                  PopupAnimation="Slide">
+                                                <Border x:Name="DropDownBorder"
+                                                       Background="White"
+                                                       BorderThickness="1"
+                                                       BorderBrush="#E7E3DA"
+                                                       CornerRadius="4"
+                                                       MinWidth="{TemplateBinding ActualWidth}"
+                                                       MaxHeight="200">
+                                                    <ScrollViewer>
+                                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                                    </ScrollViewer>
+                                                </Border>
+                                            </Popup>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Resources>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="Padding" Value="8,6"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ComboBoxItem">
+                                                <Border x:Name="ItemBorder"
+                                                       Background="Transparent"
+                                                       Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsHighlighted" Value="True">
+                                                        <Setter TargetName="ItemBorder" Property="Background" Value="#F7F5F1"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter TargetName="ItemBorder" Property="Background" Value="#E7E3DA"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Style.Resources>
+                        </Style>
+                    </ComboBox.Style>
+                    <ComboBoxItem Content="单引号 '" IsSelected="True"/>
+                    <ComboBoxItem Content="双引号 &quot;"/>
+                    <ComboBoxItem Content="无引号"/>
+                </ComboBox>
+
+                <!-- 格式化按钮 -->
+                <Button Content="格式化 (F4)"
+                       Click="ConvertButton_Click"
+                       Height="32"
+                       Padding="15,0"
+                       Background="#3C5A78"
+                       Foreground="White"
+                       BorderThickness="0"
+                       Cursor="Hand"
+                       Margin="0,0,8,0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                               CornerRadius="4"
+                                               Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#2E4760"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- 去格式化按钮 -->
+                <Button Content="去格式化"
+                       Click="UnformatButton_Click"
+                       Height="32"
+                       Padding="15,0"
+                       Background="White"
+                       Foreground="#1E2227"
+                       BorderBrush="#E7E3DA"
+                       BorderThickness="1"
+                       Cursor="Hand"
+                       Margin="0,0,8,0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                               BorderBrush="{TemplateBinding BorderBrush}"
+                                               BorderThickness="{TemplateBinding BorderThickness}"
+                                               CornerRadius="4"
+                                               Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#F7F5F1"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- 交换按钮 -->
+                <Button Content="交换"
+                       Click="SwapButton_Click"
+                       Height="32"
+                       Padding="15,0"
+                       Background="White"
+                       Foreground="#1E2227"
+                       BorderBrush="#E7E3DA"
+                       BorderThickness="1"
+                       Cursor="Hand"
+                       Margin="0,0,8,0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                               BorderBrush="{TemplateBinding BorderBrush}"
+                                               BorderThickness="{TemplateBinding BorderThickness}"
+                                               CornerRadius="4"
+                                               Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#F7F5F1"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- 复制按钮 -->
+                <Button Content="复制 (Ctrl+Shift+C)"
+                       Click="CopyButton_Click"
+                       Height="32"
+                       Padding="15,0"
+                       Background="White"
+                       Foreground="#1E2227"
+                       BorderBrush="#E7E3DA"
+                       BorderThickness="1"
+                       Cursor="Hand"
+                       Margin="0,0,8,0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                               BorderBrush="{TemplateBinding BorderBrush}"
+                                               BorderThickness="{TemplateBinding BorderThickness}"
+                                               CornerRadius="4"
+                                               Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#F7F5F1"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- 清空按钮 -->
+                <Button Content="清空"
+                       Click="ClearAllButton_Click"
+                       Height="32"
+                       Padding="15,0"
+                       Background="White"
+                       Foreground="#1E2227"
+                       BorderBrush="#E7E3DA"
+                       BorderThickness="1"
+                       Cursor="Hand">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                               BorderBrush="{TemplateBinding BorderBrush}"
+                                               BorderThickness="{TemplateBinding BorderThickness}"
+                                               CornerRadius="4"
+                                               Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#F7F5F1"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </WrapPanel>
+        </Border>
+
+        <!-- 主内容区域 -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 左侧输入区域 -->
+            <Grid Grid.Column="0" Margin="0,0,4,0">
+                <!-- 标题栏 -->
+                <Border Background="White"
+                        BorderBrush="#E7E3DA"
+                        BorderThickness="0,0,0,1"
+                        Height="40"
+                        VerticalAlignment="Top">
+                    <TextBlock Text="输入列表"
+                              FontSize="14"
+                              FontWeight="SemiBold"
+                              Foreground="#1E2227"
+                              Margin="15,0"
+                              VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- 编辑区域 -->
+                <Border Margin="0,40,0,30" Background="White">
+                    <avalonedit:TextEditor x:Name="InputEditor"
+                                          FontFamily="Consolas"
+                                          FontSize="17"
+                                          ShowLineNumbers="True"
+                                          WordWrap="False"
+                                          HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Auto"
+                                          Loaded="InputEditor_Loaded"
+                                          PreviewMouseWheel="Editor_PreviewMouseWheel"
+                                          TextChanged="InputEditor_TextChanged"/>
+                </Border>
+
+                <!-- 状态栏 -->
+                <Border Background="White"
+                        BorderBrush="#E7E3DA"
+                        BorderThickness="0,1,0,0"
+                        Height="30"
+                        VerticalAlignment="Bottom">
+                    <Grid Margin="15,0">
+                        <TextBlock x:Name="InputStatusText"
+                                  Text="每行一个值"
+                                  FontSize="12"
+                                  Foreground="#6B7077"
+                                  VerticalAlignment="Center"/>
+
+                        <TextBlock x:Name="InputCountText"
+                                  Text="0 行"
+                                  FontSize="12"
+                                  Foreground="#6B7077"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- 右侧输出区域 -->
+            <Grid Grid.Column="1" Margin="4,0,0,0">
+                <!-- 标题栏 -->
+                <Border Background="White"
+                        BorderBrush="#E7E3DA"
+                        BorderThickness="0,0,0,1"
+                        Height="40"
+                        VerticalAlignment="Top">
+                    <TextBlock Text="SQL IN 语句"
+                              FontSize="14"
+                              FontWeight="SemiBold"
+                              Foreground="#1E2227"
+                              Margin="15,0"
+                              VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- 编辑区域 -->
+                <Border Margin="0,40,0,30" Background="White">
+                    <avalonedit:TextEditor x:Name="OutputEditor"
+                                          FontFamily="Consolas"
+                                          FontSize="17"
+                                          ShowLineNumbers="True"
+                                          WordWrap="False"
+                                          HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Auto"
+                                          Loaded="OutputEditor_Loaded"
+                                          PreviewMouseWheel="Editor_PreviewMouseWheel"
+                                          PreviewKeyDown="OutputEditor_PreviewKeyDown"/>
+                </Border>
+
+                <!-- 状态栏 -->
+                <Border Background="White"
+                        BorderBrush="#E7E3DA"
+                        BorderThickness="0,1,0,0"
+                        Height="30"
+                        VerticalAlignment="Bottom">
+                    <Grid Margin="15,0">
+                        <TextBlock x:Name="OutputStatusText"
+                                  Text="就绪"
+                                  FontSize="12"
+                                  Foreground="#6B7077"
+                                  VerticalAlignment="Center"/>
+
+                        <TextBlock x:Name="OutputCountText"
+                                  Text="0 字符"
+                                  FontSize="12"
+                                  Foreground="#6B7077"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
