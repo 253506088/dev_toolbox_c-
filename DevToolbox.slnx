@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DevToolbox.App/DevToolbox.App.csproj" />
+    <Project Path="src/DevToolbox.Core/DevToolbox.Core.csproj" />
+    <Project Path="src/DevToolbox.Infrastructure/DevToolbox.Infrastructure.csproj" />
+    <Project Path="src/DevToolbox.Tools.Files/DevToolbox.Tools.Files.csproj" />
+    <Project Path="src/DevToolbox.Tools.Images/DevToolbox.Tools.Images.csproj" />
+    <Project Path="src/DevToolbox.Tools.Notes/DevToolbox.Tools.Notes.csproj" />
+    <Project Path="src/DevToolbox.Tools.Text/DevToolbox.Tools.Text.csproj" />
+    <Project Path="src/DevToolbox.Tools.Video/DevToolbox.Tools.Video.csproj" />
+  </Folder>
+</Solution>

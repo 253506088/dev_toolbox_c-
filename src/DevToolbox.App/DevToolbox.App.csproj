@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\DevToolbox.Core\DevToolbox.Core.csproj" />
+    <ProjectReference Include="..\DevToolbox.Infrastructure\DevToolbox.Infrastructure.csproj" />
+    <ProjectReference Include="..\DevToolbox.Tools.Text\DevToolbox.Tools.Text.csproj" />
+    <ProjectReference Include="..\DevToolbox.Tools.Notes\DevToolbox.Tools.Notes.csproj" />
+    <ProjectReference Include="..\DevToolbox.Tools.Files\DevToolbox.Tools.Files.csproj" />
+    <ProjectReference Include="..\DevToolbox.Tools.Images\DevToolbox.Tools.Images.csproj" />
+    <ProjectReference Include="..\DevToolbox.Tools.Video\DevToolbox.Tools.Video.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.9" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+</Project>

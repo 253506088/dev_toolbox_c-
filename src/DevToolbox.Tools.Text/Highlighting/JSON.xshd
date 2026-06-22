@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="JSON" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+    <Color name="PropertyName" foreground="#3B82F6" fontWeight="bold" />
+    <!-- Key - 蓝色加粗 -->
+    <Color name="String" foreground="#22C55E" />
+    <!-- Value 字符串 - 绿色 -->
+    <Color name="Number" foreground="#F97316" />
+    <!-- 数字 - 橙色 -->
+    <Color name="Boolean" foreground="#A855F7" />
+    <!-- 布尔值 - 紫色 -->
+    <Color name="Null" foreground="#A855F7" />
+    <!-- null - 紫色 -->
+    <Color name="Punctuation" foreground="#64748B" />
+    <!-- 标点 - 灰色 -->
+
+    <RuleSet ignoreCase="false">
+        <!-- Property names (keys) - 必须在 String 规则之前，冒号前的字符串 -->
+        <Rule color="PropertyName">
+            "[^"\\]*(?:\\.[^"\\]*)*"\s*(?=:)
+        </Rule>
+
+        <!-- String values - 普通字符串 -->
+        <Rule color="String">
+            "[^"\\]*(?:\\.[^"\\]*)*"
+        </Rule>
+
+        <!-- Numbers -->
+        <Rule color="Number">
+            -?(0|[1-9]\d*)(\.\d+)?([eE][+-]?\d+)?
+        </Rule>
+
+        <!-- Boolean -->
+        <Keywords color="Boolean">
+            <Word>true</Word>
+            <Word>false</Word>
+        </Keywords>
+
+        <!-- Null -->
+        <Keywords color="Null">
+            <Word>null</Word>
+        </Keywords>
+
+        <!-- Punctuation -->
+        <Rule color="Punctuation">
+            [{}\[\]:,]
+        </Rule>
+    </RuleSet>
+</SyntaxDefinition>
